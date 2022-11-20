@@ -49,7 +49,7 @@ function list(date, mobile_number) {
       .where("mobile_number", "like", `${mobile_number}%`);
   }
 
-  return knex(tableName)
+  return knex("reservations")
     .select("*");
 }
 

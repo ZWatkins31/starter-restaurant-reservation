@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Starter code for restaurant reservation backend",
   "main": "src/server.js",
+  "engines": {
+    "node": "12.13.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkful-Ed/starter-restaurant-reservation",

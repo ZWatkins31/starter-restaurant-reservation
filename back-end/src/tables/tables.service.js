@@ -1,17 +1,16 @@
 const knex = require("../db/connection");
 
-const tableName = "tables";
 
 /** creates a new table (row) */
 function create(table) {
-  return knex(tableName)
+  return knex("tables")
     .insert(table)
     .returning("*");
 }
 
 /** reads a table given the table_id */
 function read(table_id) {
-  return knex(tableName)
+  return knex("tables")
     .select("*")
     .where({ table_id: table_id })
     .first();
@@ -26,8 +25,9 @@ function updateReservation(reservation_id, status) {
 
 /** lists all tables. */
 function list() {
-  return knex(tableName)
-    .select("*");
+  return knex("tables")
+    .select("*")
+    .orderBy("table_name");
 }
 
 
@@ -40,13 +40,13 @@ function readReservation(reservation_id) {
 }
 
 function occupy(table_id, reservation_id) {
-  return knex(tableName)
+  return knex("tables")
     .where({ table_id: table_id })
     .update({ reservation_id: reservation_id, status: "occupied" });
 }
 
 function free(table_id) {
-  return knex(tableName)
+  return knex("tables")
     .where({ table_id: table_id })
     .update({ reservation_id: null, status: "free" });
 }
