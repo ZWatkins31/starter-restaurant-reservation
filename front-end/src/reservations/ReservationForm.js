@@ -1,85 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import ErrorAlert from "../layout/ErrorAlert";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import formatPhoneNumber from "../utils/phoneNumberFormatter";
-import { createReservation, updateReservation, readReservation } from "../utils/api";
-import { validateDate, validateFields }from "./validateDate";
+
 
 
 
 // Displays a Reservation Form used to create or edit a reservation
-const ReservationForm = ({ edit, loadDashboard }) => {
-
-  const history = useHistory();
-  const { reservation_id } = useParams();
-
-  // const [errors, setErrors] = useState([]);
-  const [reservationError, setReservationError] = useState(null);
-  const [errors, setErrors] = useState([]);
-  const [apiError, setApiError] = useState(null);
+const ReservationForm = ({
+  handleSubmit, 
+  initialState = {
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: "",
+  }
+}) => {
   
+  
+  const history = useHistory();
 
-  // Declare initial form variable
-  const initialState = {
-      first_name: "",
-      last_name: "",
-      mobile_number: "",
-      reservation_date: "",
-      reservation_time: "",
-      people: "",
-  };
 
   // Set formData default state to initialState variable
   const [formData, setFormData] = useState(initialState);
 
-
-  useEffect(() => {
-    if (edit) {
-      // if (reservation.status === "booked") return <p> Only booked reservaitons can be edited.</p>
-      loadReservation();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function loadReservation() {
-    const abortController = new AbortController();
-    setReservationError(null);
-    readReservation(reservation_id, abortController.signal)
-      .then(setFormData)
-      .catch(setReservationError);
-    return () => abortController.abort();
-  }
-
-
-  function handleSubmit(sumbmittedFormData) {
-    const abortController = new AbortController();
-    const foundErrors = [];
-
-    if (validateDate(sumbmittedFormData, foundErrors) && validateFields(sumbmittedFormData, foundErrors)) {
-      if (edit) {
-        updateReservation(reservation_id, formData, abortController.signal)
-          .then(loadDashboard)
-          .then(() =>
-            history.push(`/dashboard?date=${formData.reservation_date}`)
-          )
-          .catch(setApiError);
-      } else {
-        createReservation(formData, abortController.signal)
-          .then(loadDashboard)
-          .then(() =>
-            history.push(`/dashboard?date=${formData.reservation_date}`)
-          )
-          .catch(setApiError);
-      }
-    }
-    setErrors(foundErrors);
-    return () => abortController.abort();
-  };
-
-
-  const errorsJSX = () => {
-    return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
-  };
 
 
   // Updates the state of the form whenever the user makes changes to it
@@ -111,11 +56,7 @@ const ReservationForm = ({ edit, loadDashboard }) => {
           e.preventDefault();
           handleSubmit(formData);
         }}>
-        <h1 className='text-center py-4'>{edit ? 'Edit' : 'New'} Reservation</h1>
 
-        {errorsJSX()}
-        <ErrorAlert error={apiError} />
-        <ErrorAlert error={reservationError} />
         
         <div className='form-group'>
           <label>First Name</label>
