@@ -4,7 +4,7 @@
   "description": "Starter code for restaurant reservation backend",
   "main": "src/server.js",
   "engines": {
-    "node": "12.13.0"
+    "node": "18.12.1"
   },
   "repository": {
     "type": "git",
